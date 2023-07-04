@@ -1,0 +1,69 @@
+silhouette-brain-logic-mental-health-know-communication-1444651-pxhere.com.jpg by Mohamed Hassan from https://pxhere.com/en/photo/1444651
+CC0 Public Domain
+
+Indiana Jones Character Images from https://indianajones.fandom.com/wiki/Main_Page
+
+Adventure Font by Pixel Sagas from https://www.fontspace.com/adventure-font-f18210
+
+BG Primary Color: #ebdaba
+BG Secondary Color: #cd9265
+
+Normal Classes:
+game
+    roundCurr {Number} Current round 
+    roundMax {Number} Max number of rounds
+    scoreCurrent {Number} Current game score
+    scoreBest {Number} Best score from previous games
+    cards {[Card]} All possible cards
+    cardsInRound {[Card]} Cards in current round (randomized order after every selection)
+    cardSelectedInRound {[Card]} Cards selected in current round
+
+    createNewRound()
+        - Set cardsSelectedInRound to empty array
+        - Use roundCurr, roundMax, and cards.length to get numCardsPerRound
+        - Sets cardsInRound with numCardsPerRound random cards
+
+    createNewGame()
+        - Reset roundCurr to 1
+        - Reset scoreCurrent to zero
+
+    selectCard(selectedCard)
+        - If selectedCard is NOT in cardsInRound (invalid), return
+        - If selectedCard is already in cardsSelectedInRound, end game and return
+        - If reach here, selectedCard is valid AND NOT already selected
+        - Add selctedCard to cardsSelectedInRound array
+        - Increment scoreCurrent
+        - if scoreCurrent >= scoreBest
+            - Set scoreBest to scoreCurrent
+        - Check if round is completed
+
+    checkRoundComplete()
+        - if cardsInRound.length === cardsSelectedInRound.length
+            - Round is complete
+            - if roundCurr === roundMax
+                - endGame(true)
+            - else
+                - Increment roundCurr
+                - createNewRound()
+        - else round continues
+
+    endGame(didWin = false)
+        - Display win/lose message
+        - Display current and best score
+
+card
+    imageUrl
+
+Components:
+    Game
+        game
+    Scoreboard
+        scoreCurrent
+        scoreBest
+    Round 
+        Card
+            card
+            id
+    GameOverScreen
+        message comparing current score and best score
+        button to start new game from first round
