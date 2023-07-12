@@ -80,6 +80,33 @@ h1, h2, h3 {
     text-align: center;
 }
 
+#game-over-message-container {
+    height: 100%;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    gap: 2rem;
+    font-size: 3rem;
+    text-align: center;
+
+    button {
+        font-family: inherit;
+        font-size: inherit;
+        cursor: pointer;
+        background-color: var(--bg-primary);
+        outline: 0.3em dashed var(--bg-secondary);
+        border: none;
+        border-radius: 1em;
+        transform: scale(0.8);
+        transition: transform ease-in-out 100ms;
+
+        &:hover {
+            background-color: var(--bg-secondary);
+            transform: scale(1);
+        }
+    }
+}
+
 #scoreboard {
     display: flex;
     justify-content: center;
@@ -92,6 +119,10 @@ h1, h2, h3 {
 
 #round-container {
     text-align: center;
+}
+
+#memory-card-game-container {
+    height: 100%;
 }
 
 #memory-card-round {

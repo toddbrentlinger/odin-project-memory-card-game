@@ -1,7 +1,7 @@
 import React from "react";
 
 function GameOverMessage(props) {
-    const { didWin = false, createNewGame } = props;
+    const { createNewGame, score, scoreBest, didWin = false } = props;
 
     const displayWinMessage = () => {
         return (
@@ -15,12 +15,23 @@ function GameOverMessage(props) {
         );
     };
 
+    const displayScoreMessage = () => {
+        if (score >= scoreBest) {
+            return `New Best Score: ${scoreBest}`
+        } else { // Else score < scoreBest
+            return `Score: ${score} (Best: ${scoreBest})`;
+        }
+    };
+
     return (
         <section id="game-over-message-container">
             {
                 didWin ? displayWinMessage() : displayLoseMessage()
             }
-            <button onClick={createNewGame}>Start New Game</button>
+            <p>{displayScoreMessage()}</p>
+            <button onClick={createNewGame}>
+                <span>Start New Game</span>
+            </button>
         </section>
     );
 }
