@@ -4,7 +4,7 @@ function Card(props) {
     const { image, title } = props.card;
 
     const handleSelectCard = () => {
-        props.handleSelectCard(props.card);
+        props.handleSelectCard(props.card.id);
     };
 
     return (

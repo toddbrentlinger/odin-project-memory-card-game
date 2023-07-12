@@ -1,92 +1,84 @@
 import Card from "./card";
 
-function importAll(r) {
-    return r.keys();
+export class GameState {
+    static PLAYING = new GameState(0);
+    static WON = new GameState(1);
+    static LOST = new GameState(2);
+
+    constructor(value) {
+        this.value = value;
+    }
 }
 
-const images = importAll(require.context('../images/characters', false, /\.(png|jpe?g|svg)$/));
+const game = (() => {
+    const cards = importAllCards(require.context('../images/characters', false, /\.(png|jpe?g|svg)$/));
+    const roundMax = 5;
 
-class Game {
-    constructor(scoreBest = 0) {
-        this.roundMax = 5;
-        this.scoreBest = scoreBest;
-        this.populateCards();
-    }
+    let cardsInRound = [];
+    let cardsSelectedInRound = [];
+    let round = 1;
+    let score = 0;
+    let scoreBest = Number(localStorage.getItem('scoreBest')) || 0;
+    let gameState = null;
 
-    createNewGame() {
-        this.roundCurrent = 1;
-        this.scoreCurrent = 0;
-        this.createNewRound();
-    }
-
-    createNewRound() {
-        console.log(`Round ${this.roundCurrent} of ${this.roundMax}`);
-        this.cardsSelectedInRound = [];
-        const numCardsPerRound = parseInt(this.cards.length / this.roundMax) * this.roundCurrent;
-        this.cardsInRound = this.getRandomItems(this.cards, numCardsPerRound);
-    }
-
-    selectCard(selectedCard) {
-        // Return if selectedCard is not even in cardsInRound (invalid card)
-        if (!this.cardsInRound.includes(selectedCard)) { return; }
-
-        // If selectedCard is already in cardsSelectedInRound, end game and return
-        if (this.cardsSelectedInRound.includes(selectedCard)) {
-            this.endGame();
-            return;
-        }
-
-        // If reach here, selectedCard is valid AND NOT already selected
-        
-        // Add selectedCard to cardsSelectedInRound array
-        this.cardsSelectedInRound.push(selectedCard);
-
-        // Increment current score
-        this.scoreCurrent++;
-
-        // Update best score if necessary
-        if (this.scoreCurrent >= this.scoreBest) {
-            this.scoreBest = this.scoreCurrent;
-        }
-
-        // Check if round is complete
-        this.checkRoundComplete();
-    }
-
-    checkRoundComplete() {
-        if (this.cardsInRound.length === this.cardsSelectedInRound.length) {
-            if (this.roundCurrent === this.roundMax) {
-                this.endGame(true);
+    function checkRoundComplete() {
+        if (cardsInRound.length === cardsSelectedInRound.length) {
+            if (round === roundMax) {
+                endGame(true);
             } else {
-                this.roundCurrent++;
-                this.createNewRound();
+                round++;
+                createNewRound();
             }
         } else {
             // Continue round
-            this.randomizeCardsInRound();
+            randomizeArr(cardsInRound);
+            console.log(`Score: ${score}\nSelect Card`);
+            displayRoundCards();
         }
     }
 
-    endGame(didWin = false) {
-        if (didWin) {
-
-        } else {
-            console.log(`Game Over!\nCurrent Score: ${this.scoreCurrent}\nBest Score: ${this.scoreBest}`);
-        }
+    function createNewGame() {
+        console.log(`New Game! Best Score: ${scoreBest}`);
+        round = 1;
+        score = 0;
+        gameState = GameState.PLAYING;
+        createNewRound();
     }
 
-    populateCards() {
-        this.cards = images.map((imageUrl) => new Card(imageUrl));
+    function createNewRound() {
+        console.log(`Round ${round} of ${roundMax}`);
+        console.log('Select Card');
+        cardsSelectedInRound = [];
+        const numCardsPerRound = parseInt(cards.length / roundMax) * round;
+        cardsInRound = getRandomItems(cards, numCardsPerRound);
+        displayRoundCards();
     }
 
-    init() {
-        this.createNewGame();
+    function displayRoundCards() {
+        let msg = '';
+
+        cardsInRound.forEach((card, index) => {
+            msg += `${card.id} - ${card.title}`;
+            if (index < cardsInRound.length - 1) {
+                msg += '\n';
+            }
+        });
+
+        console.log(msg);
     }
 
-    getRandomItems(arr, nItems) {
+    function endGame(didWin = false) {
+        let msg = didWin ? "Congratulations! You Won!" : "Game Over! Better Luck Next Time!";
+        msg += `\nCurrent Score: ${score}\nBest Score: ${scoreBest}`;
+        console.log(msg);
+
+        gameState = didWin ? GameState.WON : GameState.LOST;
+    }
+
+    function getRandomItems(arr, nItems) {
         // If arr length is less than or equal to nItems, return all items from arr
         if (arr.length <= nItems) { return [...arr]; }
-
+    
         let itemArr = [];
         let item;
         while (nItems > 0) {
@@ -96,13 +88,28 @@ class Game {
                 nItems--;
             }
         }
-
+    
         return itemArr;
     }
 
-    /** Randomizes cards in current round using the Fisher-Yates (aka Knuth) Shuffle */
-    randomizeCardsInRound() {
-        let currIndex = this.cardsInRound.length, randomIndex;
+    function importAllCards(r) {
+        console.log('Import all cards!');
+        return r.keys().map((item) => {
+            return new Card(r(item), item.replace('./', ''));
+        });
+    }
+
+    function play() {
+        createNewGame();
+    }
+
+    /**
+     * Randomizes array in-place using the Fisher-Yates (aka Knuth) Shuffle.
+     * @param {Array} arr 
+     * @returns Randomized array
+     */
+    function randomizeArr(arr) {
+        let currIndex = arr.length, randomIndex;
 
         // While there are remaining items to shuffle
         while (currIndex > 0) {
@@ -113,12 +120,65 @@ class Game {
             currIndex--;
 
             // Swap random item with current item
-            [this.cardsInRound[currIndex], this.cardsInRound[randomIndex]] = [
-                this.cardsInRound[randomIndex],
-                this.cardsInRound[currIndex]
+            [arr[currIndex], arr[randomIndex]] = [
+                arr[randomIndex],
+                arr[currIndex]
             ];
         }
-    }
-}
 
-export default Game;
+        return arr;
+    }
+
+    function selectCard(selectedCardId) {
+        // If game state is NOT PLAYING, return
+        if (gameState !== GameState.PLAYING) { return; }
+
+        const selectedCard = cards.find((card) => card.id === selectedCardId);
+
+        // Return if selectedCard does not exist
+        if (selectedCard === undefined) { return; }
+
+        // Return if selectedCard is not even in cardsInRound (invalid card)
+        if (!cardsInRound.includes(selectedCard)) { return; }
+
+        console.log(`Selected Card: ${selectedCard.title}`);
+
+        // If selectedCard is already in cardsSelectedInRound, end game and return
+        if (cardsSelectedInRound.includes(selectedCard)) {
+            endGame();
+            return gameState;
+        }
+
+        // If reach here, selectedCard is valid AND NOT already selected
+        
+        // Add selectedCard to cardsSelectedInRound array
+        cardsSelectedInRound.push(selectedCard);
+
+        // Increment current score
+        score++;
+
+        // Update best score if necessary
+        if (score >= scoreBest) {
+            scoreBest = score;
+            localStorage.setItem('scoreBest', scoreBest);
+        }
+
+        // Check if round is complete
+        checkRoundComplete();
+
+        return gameState;
+    }
+
+    return {
+        play,
+        selectCard,
+        get cardsInRound() { return [...cardsInRound]; },
+        get gameState() { return gameState; },
+        get round() { return round; },
+        get roundMax() { return roundMax; },
+        get score() { return score; },
+        get scoreBest() { return scoreBest },
+    };
+})();
+
+export default game;

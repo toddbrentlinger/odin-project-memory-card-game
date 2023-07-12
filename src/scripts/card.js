@@ -1,6 +1,10 @@
+import uniqid from "uniqid";
+
 class Card {
-    constructor(imageUrl) {
-        this.imageUrl = imageUrl;
+    constructor(image, title) {
+        this.id = uniqid();
+        this.image = image;
+        this.title = title;
     }
 }
 

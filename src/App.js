@@ -5,7 +5,7 @@ import './App.scss';
 import './styles/styles.scss';
 import './fonts/adventure-font/Adventure-YGZ2.ttf';
 
-function App({ game }) {
+function App() {
   return (
     <>
       <header>
@@ -13,7 +13,7 @@ function App({ game }) {
         <h1>Memory Card Game</h1>
       </header>
       <main>
-        <GameComponent game={ game } />
+        <GameComponent />
       </main>
       <Footer
         initialYear={2023}
