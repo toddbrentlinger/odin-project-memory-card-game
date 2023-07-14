@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/odin-project-memory-card-game/static/css/main.e8b57647.css",
+    "main.js": "/odin-project-memory-card-game/static/js/main.14708148.js",
+    "static/media/Site-background-light_2880.jpg": "/odin-project-memory-card-game/static/media/Site-background-light_2880.a4d0dd87faf7532c48a2.jpg",
+    "static/media/Site-background-light_2048.jpg": "/odin-project-memory-card-game/static/media/Site-background-light_2048.80e1adf8b8d2cfffa29c.jpg",
+    "static/media/Site-background-light_1500.jpg": "/odin-project-memory-card-game/static/media/Site-background-light_1500.8e50a8439c8587c6f936.jpg",
+    "static/media/Site-background-light_1280.jpg": "/odin-project-memory-card-game/static/media/Site-background-light_1280.3299b1d2f8aee3426a96.jpg",
+    "static/media/Site-background-light_1200.jpg": "/odin-project-memory-card-game/static/media/Site-background-light_1200.0966533a4f75e0534546.jpg",
+    "static/media/Site-background-light_1024.jpg": "/odin-project-memory-card-game/static/media/Site-background-light_1024.e7ecf34b9e3760be0593.jpg",
+    "static/media/Site-background-light_600.jpg": "/odin-project-memory-card-game/static/media/Site-background-light_600.7792138a1330b3953237.jpg",
+    "static/media/card-back-logo-200.jpg": "/odin-project-memory-card-game/static/media/card-back-logo-200.4e46f03455601cc05ef6.jpg",
+    "static/media/Adventure-YGZ2.ttf": "/odin-project-memory-card-game/static/media/Adventure-YGZ2.9677cd8d8e48154cdfab.ttf",
+    "static/media/Indiana_Jones_logo.svg": "/odin-project-memory-card-game/static/media/Indiana_Jones_logo.a6fcfadaa0891a1588be3fbf72a73e5a.svg",
+    "index.html": "/odin-project-memory-card-game/index.html",
+    "main.e8b57647.css.map": "/odin-project-memory-card-game/static/css/main.e8b57647.css.map",
+    "main.14708148.js.map": "/odin-project-memory-card-game/static/js/main.14708148.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e8b57647.css",
+    "static/js/main.14708148.js"
+  ]
+}
